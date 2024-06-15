@@ -1,0 +1,78 @@
+<div class="" style="display: flex;">
+  <div class="card" style="width: 40%; margin-left: 0;">
+    <h2>Add Product</h2>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      <input formControlName="id" type="hidden">
+      
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input id="name" formControlName="name" class="form-control" [ngClass]="{'is-invalid': productForm.get('name')?.invalid && productForm.get('name')?.touched}">
+        <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="invalid-feedback">
+          <small *ngIf="productForm.get('name')?.errors?.['required']">Name is required.</small>
+          <small *ngIf="productForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</small>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="price">Price:</label>
+        <input id="price" formControlName="price" type="number" class="form-control" [ngClass]="{'is-invalid': productForm.get('price')?.invalid && productForm.get('price')?.touched}">
+        <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="invalid-feedback">
+          <small *ngIf="productForm.get('price')?.errors?.['required']">Price is required.</small>
+          <small *ngIf="productForm.get('price')?.errors?.['min']">Price must be a positive number.</small>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <input id="category" formControlName="category" class="form-control" [ngClass]="{'is-invalid': productForm.get('category')?.invalid && productForm.get('category')?.touched}">
+        <div *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched" class="invalid-feedback">
+          <small *ngIf="productForm.get('category')?.errors?.['required']">Category is required.</small>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">{{ isEditing ? 'Update' : 'Add' }}</button>
+    </form>
+  </div>
+  
+  <div class="card" style="width: 60%; margin-right: 0; margin-left: 0;">  
+    <h2>Product List</h2>
+    <div class="table-container">
+      <div class="p-input-icon-left" style="width: 100%;">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" (input)="applyFilter($event)" placeholder="Search">
+      </div>
+  
+      <p-table 
+        [value]="products" 
+        [paginator]="true" 
+        [rows]="5" 
+        [sortField]="sortField" 
+        [sortOrder]="sortOrder"
+        [globalFilterFields]="['name', 'price', 'category']">
+  
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+            <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.category }}</td>
+            <td class="actions">
+              <button pButton type="button" icon="pi pi-pencil" (click)="onEdit(product)" class="btn btn-warning btn-sm"></button>
+              <button pButton type="button" icon="pi pi-trash" (click)="onDelete(product.id)" class="btn btn-danger btn-sm"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft" let-state>
+          <p>Showing {{ state.first + 1 }} to {{ state.first + state.rows }} of {{ state.totalRecords }} entries</p>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

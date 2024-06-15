@@ -1,0 +1,7 @@
+  
+  ::ng-deep ngx-charts-bar-vertical {
+    display: block;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
